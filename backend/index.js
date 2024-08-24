@@ -1,7 +1,10 @@
 import express, { urlencoded } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import connectDB from "./utils/db.js";
 
+dotenv.config({});
 const app = express();
 
 // middlewares
@@ -14,14 +17,15 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.get("/",(req,res)=>{
-    return res.status(200).json({
-        message:"Hello from server",
-        success:true
-    })
-})
+app.get("/", (req, res) => {
+  return res.status(200).json({
+    message: "Hello from server",
+    success: true,
+  });
+});
 
-const PORT = 8000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
+    connectDB();
   console.log(`Server is running on port:${PORT}`);
 });
