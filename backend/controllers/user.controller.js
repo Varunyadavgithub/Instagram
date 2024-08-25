@@ -81,8 +81,19 @@ export const Login = async (req, res) => {
       .json({
         message: `Welcome back ${user.username}`,
         success: true,
-        user
+        user,
       });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const Logout = async (_, res) => {
+  try {
+    return res.cookie("token", "", { maxAge: 0 }).json({
+      message: "Logged out successfully",
+      success: true,
+    });
   } catch (error) {
     console.log(error);
   }
