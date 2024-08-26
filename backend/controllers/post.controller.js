@@ -115,3 +115,29 @@ export const likePost = async (req, res) => {
     console.log(error);
   }
 };
+
+export const dislikePost=async (req,res)=>{
+    try {
+        const likeKrneWalaUser=req.id;
+        const postId=req.params.id;
+        const post=await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({
+                message:"Post not found",
+                success:false
+            })
+        }
+        // dislike logic
+        await post.updateOne({$pull:{likes:likeKrneWalaUser}});
+        await post.save();
+        
+        // implement socket io for real time notifications
+
+        return res.status(200).json({
+            message:"Post disliked",
+            super:true
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
