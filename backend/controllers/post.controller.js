@@ -117,61 +117,82 @@ export const likePost = async (req, res) => {
   }
 };
 
-export const dislikePost=async (req,res)=>{
-    try {
-        const likeKrneWalaUser=req.id;
-        const postId=req.params.id;
-        const post=await Post.findById(postId);
-        if (!post) {
-            return res.status(404).json({
-                message:"Post not found",
-                success:false
-            })
-        }
-        // dislike logic
-        await post.updateOne({$pull:{likes:likeKrneWalaUser}});
-        await post.save();
-        
-        // implement socket io for real time notifications
-
-        return res.status(200).json({
-            message:"Post disliked",
-            super:true
-        })
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-export const addComment=async (req,res)=>{
+export const dislikePost = async (req, res) => {
   try {
-    const postId=req.params.id;
-    const commentKarneWaleUserKiId=req.id;
-    const {text}=req.body;
+    const likeKrneWalaUser = req.id;
+    const postId = req.params.id;
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({
+        message: "Post not found",
+        success: false,
+      });
+    }
+    // dislike logic
+    await post.updateOne({ $pull: { likes: likeKrneWalaUser } });
+    await post.save();
+
+    // implement socket io for real time notifications
+
+    return res.status(200).json({
+      message: "Post disliked",
+      super: true,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addComment = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const commentKarneWaleUserKiId = req.id;
+    const { text } = req.body;
     if (!text) {
       return res.status(404).json({
-        message:"Text is required",
-        success:false
-      })
+        message: "Text is required",
+        success: false,
+      });
     }
-    const post=await Post.findById(postId);
-    const comment=await Comment.create({
+    const post = await Post.findById(postId);
+    const comment = await Comment.create({
       text,
-      author:commentKarneWaleUserKiId,
-      post:postId
+      author: commentKarneWaleUserKiId,
+      post: postId,
     }).populate({
-      path:"author",
-      select:"username,profilePicture"
-    })
+      path: "author",
+      select: "username,profilePicture",
+    });
     post.Comments.push(comment._id);
     await post.save();
 
     return res.status(200).json({
-      message:"Comment created successfully",
-      success:true
-    })
+      message: "Comment created successfully",
+      success: true,
+    });
   } catch (error) {
     console.log(error);
   }
-}
+};
 
+export const getComments = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const comments = await Comment.find({ post: postId }).populate(
+      "author",
+      "username,profilePicture"
+    );
+    if (!comments) {
+      return res.status(404).json({
+        message: "No comments found for this Post",
+        success: false,
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      comments,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
