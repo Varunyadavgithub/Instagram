@@ -90,3 +90,28 @@ export const getUserPost = async (req, res) => {
     console.log(error);
   }
 };
+
+export const likePost = async (req, res) => {
+  try {
+    const likeKrneWalaUser = req.id;
+    const postId = req.params.id;
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res
+        .status(404)
+        .json({ message: "Post not found", success: false });
+    }
+    // like logic
+    await post.updateOne({ $addToSet: { likes: likeKrneWalaUser } });
+    await post.save();
+
+    // Implement socket io for real time notifications
+
+    return res.status(200).json({
+      message: "Post liked",
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
