@@ -159,11 +159,12 @@ export const addComment = async (req, res) => {
       text,
       author: commentKarneWaleUserKiId,
       post: postId,
-    }).populate({
+    })
+    await comment.populate({
       path: "author",
       select: "username,profilePicture",
     });
-    post.Comments.push(comment._id);
+    post.comments.push(comment._id);
     await post.save();
 
     return res.status(200).json({
