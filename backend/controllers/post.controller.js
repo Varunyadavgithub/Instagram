@@ -2,6 +2,7 @@ import sharp from "sharp";
 import cloudinary from "../utils/cloudinarySetup.js";
 import { Post } from "../models/post.model.js";
 import { User } from "../models/user.model.js";
+import { Comment } from "../models/comment.model.js";
 
 export const createPost = async (req, res) => {
   try {
@@ -141,3 +142,36 @@ export const dislikePost=async (req,res)=>{
         console.log(error);
     }
 }
+
+export const addComment=async (req,res)=>{
+  try {
+    const postId=req.params.id;
+    const commentKarneWaleUserKiId=req.id;
+    const {text}=req.body;
+    if (!text) {
+      return res.status(404).json({
+        message:"Text is required",
+        success:false
+      })
+    }
+    const post=await Post.findById(postId);
+    const comment=await Comment.create({
+      text,
+      author:commentKarneWaleUserKiId,
+      post:postId
+    }).populate({
+      path:"author",
+      select:"username,profilePicture"
+    })
+    post.Comments.push(comment._id);
+    await post.save();
+
+    return res.status(200).json({
+      message:"Comment created successfully",
+      success:true
+    })
+  } catch (error) {
+    console.log(error);
+  }
+}
+
