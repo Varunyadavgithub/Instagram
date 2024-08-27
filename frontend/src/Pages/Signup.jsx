@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [input, setInput] = useState({
@@ -98,6 +98,7 @@ const Signup = () => {
           >
             {loading ? "Loading..." : "Signup"}
           </button>
+          <span className="text-center font-semibold my-2">Already have an Account? <Link to="/login" className="text-blue-600 hover:underline font-bold">Login</Link></span>
         </form>
       </div>
     </>

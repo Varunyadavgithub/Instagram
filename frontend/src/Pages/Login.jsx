@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -9,8 +9,8 @@ const Login = () => {
     password: "",
   });
   const [loading, setLoading] = useState(false);
-  const navigate=useNavigate();
-  
+  const navigate = useNavigate();
+
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -36,7 +36,7 @@ const Login = () => {
           email: "",
           password: "",
         });
-        navigate("/")
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
@@ -87,6 +87,15 @@ const Login = () => {
           >
             {loading ? "Loading..." : "Login"}
           </button>
+          <span className="text-center font-semibold my-2">
+            Don't have an Account?{" "}
+            <Link
+              to="/signup"
+              className="text-blue-600 hover:underline font-bold"
+            >
+              Signup
+            </Link>
+          </span>
         </form>
       </div>
     </>
