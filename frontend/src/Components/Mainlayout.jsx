@@ -1,16 +1,16 @@
-import React from 'react'
+import React from "react";
+import LeftSidebar from "./LeftSidebar";
 // import { Outlet } from 'react-router-dom'
-import LeftSidebar from './LeftSidebar'
 
 const Mainlayout = () => {
   return (
     <>
-     <LeftSidebar/>
-     {/* <div>
+      <LeftSidebar />
+      {/* <div>
       <Outlet/>
      </div>  */}
     </>
-  )
-}
+  );
+};
 
-export default Mainlayout
+export default Mainlayout;
