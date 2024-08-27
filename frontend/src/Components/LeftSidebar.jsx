@@ -7,6 +7,9 @@ import { FaRegHeart } from "react-icons/fa";
 import { LuPlusSquare } from "react-icons/lu";
 import { AiOutlineLogout } from "react-icons/ai";
 import Avatar from 'react-avatar';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import axios from 'axios';
 
 const sidebarItems=[
     {
@@ -45,6 +48,26 @@ const sidebarItems=[
     }
 ]
 const LeftSidebar = () => {
+    const navigate=useNavigate();
+
+    const logoutHandler=async ()=>{
+        try {
+            const res=await axios.get("http://localhost:8000/api/v1/user/logout",{withCredentials:true});
+            if (res.data.success) {
+                toast.success(res.data.message);
+                navigate("/login")
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.message);
+        }
+    }
+
+    const sidebarHandler=(textType)=>{
+        if (textType==="Logout") {
+            logoutHandler();            
+        }
+    }
   return (
     <>
     <div className="fixed top-0 z-10 left-0 px-4 border-r border-gray-300 w-[16%] h-screen">
@@ -54,7 +77,7 @@ const LeftSidebar = () => {
     {
       sidebarItems.map((item,index)=>{
         return (
-            <div key={index} className='flex items-center gap-3 relative hover:bg-gray-100 cursor-pointer rounded-lg p-3 my-3'>
+            <div onClick={()=>sidebarHandler(item.text)} key={index} className='flex items-center gap-3 relative hover:bg-gray-100 cursor-pointer rounded-lg p-3 my-3'>
                 {item.icon}
                 <span className='text-xl font-semibold'>{item.text}</span>
             </div>
