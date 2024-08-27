@@ -70,9 +70,9 @@ const LeftSidebar = () => {
   };
   return (
     <>
-      <div className="fixed top-0 z-10 left-0 px-4 border-r border-gray-300 lg:w-[16%] md:w-[17%] h-screen hidden lg:block">
+      <div className="fixed top-0 z-10 left-0 px-4 border-r border-gray-300 lg:w-[16%] md:w-[18%] h-screen hidden md:block">
         <div className="flex flex-col">
-          <h1 className="text-center text-3xl font-bold my-3">Instagram</h1>
+          <h1 className="text-center md:text-2xl lg:text-3xl font-bold my-3">Instagram</h1>
           <div>
             {sidebarItems.map((item, index) => {
               return (
@@ -82,7 +82,7 @@ const LeftSidebar = () => {
                   className="flex items-center gap-3 relative hover:bg-gray-100 cursor-pointer rounded-lg p-3 my-3"
                 >
                   {item.icon}
-                  <span className="text-md lg:text-xl font-semibold">{item.text}</span>
+                  <span className="md:text-sm lg:text-xl font-semibold">{item.text}</span>
                 </div>
               );
             })}
