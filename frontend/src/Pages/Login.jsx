@@ -3,15 +3,14 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const Login = () => {
   const [input, setInput] = useState({
-    username: "",
     email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
   const navigate=useNavigate();
-
+  
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -22,7 +21,7 @@ const Signup = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/register",
+        "http://localhost:8000/api/v1/user/login",
         input,
         {
           headers: {
@@ -34,11 +33,10 @@ const Signup = () => {
       if (res.data.success) {
         toast.success(res.data.message);
         setInput({
-          username: "",
           email: "",
           password: "",
         });
-        navigate('/login');
+        navigate("/")
       }
     } catch (error) {
       console.log(error);
@@ -59,19 +57,10 @@ const Signup = () => {
               Instagram
             </h1>
             <p className="text-md text-center mt-2 font-semibold">
-              Signup to see photos & videos from your friends
+              Login to see photos & videos from your friends
             </p>
           </div>
-          <div className="flex flex-col">
-            <span className="font-medium">Username</span>
-            <input
-              type="text"
-              name="username"
-              value={input.username}
-              onChange={changeEventHandler}
-              className="focus-visible:ring-transparent my-1 p-2 border border-black rounded-md"
-            />
-          </div>
+
           <div className="flex flex-col">
             <span className="font-medium">Email</span>
             <input
@@ -96,7 +85,7 @@ const Signup = () => {
             disabled={loading}
             className="bg-blue-500 hover:bg-blue-700 p-2 rounded-md text-white text-lg"
           >
-            {loading ? "Loading..." : "Signup"}
+            {loading ? "Loading..." : "Login"}
           </button>
         </form>
       </div>
@@ -104,4 +93,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;
