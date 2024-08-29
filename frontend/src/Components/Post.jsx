@@ -6,17 +6,20 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { TbMessageCircle } from "react-icons/tb";
 import { FiSend } from "react-icons/fi";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa6";
+import CommentDialog from "./CommentDialog";
 
 const Post = () => {
   const [text, setText] = useState("");
-  const changEventHandler=(e)=>{
-    const inputText=e.target.value;
-    if(inputText.trim()){
-        setText(inputText);
-    }else{
-        setText("");
+  const [open, setOpen] = useState(false);
+
+  const changEventHandler = (e) => {
+    const inputText = e.target.value;
+    if (inputText.trim()) {
+      setText(inputText);
+    } else {
+      setText("");
     }
-  }
+  };
   return (
     <>
       <div className="my-8 w-full max-w-sm mx-auto">
@@ -65,6 +68,7 @@ const Post = () => {
             <TbMessageCircle
               size={24}
               className="cursor-pointer hover:text-gray-600"
+              onClick={() => setOpen(true)}
             />
             <FiSend size={24} className="cursor-pointer hover:text-gray-600" />
           </div>
@@ -77,7 +81,8 @@ const Post = () => {
         <p>
           <span className="font-medium mr-2">username</span>caption
         </p>
-        <span>View all 50 comments</span>
+        <span className="cursor-pointer text-md text-gray-400" onClick={() => setOpen(true)}>View all 50 comments</span>
+        <CommentDialog open={open} setOpen={setOpen} />
         <div className="flex items-center justify-between">
           <input
             type="text"
@@ -86,9 +91,7 @@ const Post = () => {
             placeholder="Add a comment..."
             className="outline-none text-sm w-full"
           />
-          {
-            text && <span className="text-[#38ADF8]">Post</span>
-          }
+          {text && <span className="text-[#38ADF8]">Post</span>}
         </div>
       </div>
     </>
