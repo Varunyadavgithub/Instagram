@@ -10,43 +10,11 @@ import Avatar from "react-avatar";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
-const sidebarItems = [
-  {
-    icon: <GoHome size={30} />,
-    text: "Home",
-  },
-  {
-    icon: <IoSearchOutline size={30} />,
-    text: "Search",
-  },
-  {
-    icon: <MdOutlineExplore size={30} />,
-    text: "Explore",
-  },
-  {
-    icon: <BiMessageRoundedCheck size={30} />,
-    text: "Messages",
-  },
-  {
-    icon: <FaRegHeart size={30} />,
-    text: "Notifications",
-  },
-  {
-    icon: <LuPlusSquare size={30} />,
-    text: "Create",
-  },
-  {
-    icon: <Avatar src="#" size="40" round={true} />,
-    text: "Profile",
-  },
-  {
-    icon: <AiOutlineLogout size={30} />,
-    text: "Logout",
-  },
-];
 const LeftSidebar = () => {
   const navigate = useNavigate();
+  const { user } = useSelector((store) => store.auth);
 
   const logoutHandler = async () => {
     try {
@@ -68,11 +36,47 @@ const LeftSidebar = () => {
       logoutHandler();
     }
   };
+  const sidebarItems = [
+    {
+      icon: <GoHome size={30} />,
+      text: "Home",
+    },
+    {
+      icon: <IoSearchOutline size={30} />,
+      text: "Search",
+    },
+    {
+      icon: <MdOutlineExplore size={30} />,
+      text: "Explore",
+    },
+    {
+      icon: <BiMessageRoundedCheck size={30} />,
+      text: "Messages",
+    },
+    {
+      icon: <FaRegHeart size={30} />,
+      text: "Notifications",
+    },
+    {
+      icon: <LuPlusSquare size={30} />,
+      text: "Create",
+    },
+    {
+      icon: <Avatar src={user?.profilePicture} size="40" round={true} />,
+      text: "Profile",
+    },
+    {
+      icon: <AiOutlineLogout size={30} />,
+      text: "Logout",
+    },
+  ];
   return (
     <>
       <div className="fixed top-0 z-10 left-0 px-4 border-r border-gray-300 lg:w-[16%] md:w-[18%] h-screen hidden md:block">
         <div className="flex flex-col">
-          <h1 className="text-center md:text-2xl lg:text-3xl font-bold my-3">Instagram</h1>
+          <h1 className="text-center md:text-2xl lg:text-3xl font-bold my-3">
+            Instagram
+          </h1>
           <div>
             {sidebarItems.map((item, index) => {
               return (
@@ -82,7 +86,9 @@ const LeftSidebar = () => {
                   className="flex items-center gap-3 relative hover:bg-gray-100 cursor-pointer rounded-lg p-3 my-3"
                 >
                   {item.icon}
-                  <span className="md:text-sm lg:text-xl font-semibold">{item.text}</span>
+                  <span className="md:text-sm lg:text-xl font-semibold">
+                    {item.text}
+                  </span>
                 </div>
               );
             })}

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setAuthUser } from "@/redux/authSlice.js";
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -10,6 +12,7 @@ const Login = () => {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -31,6 +34,7 @@ const Login = () => {
         }
       );
       if (res.data.success) {
+        dispatch(setAuthUser(res.data.user));
         toast.success(res.data.message);
         setInput({
           email: "",
