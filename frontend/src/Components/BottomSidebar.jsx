@@ -31,7 +31,7 @@ const sidebarItems = [
 const BottomSidebar = () => {
   return (
     <>
-      <div className="w-full h-auto py-1 px-4 border-t border-t-[#1d1d1d] fixed bottom-0 left-0 md:hidden block">
+      <div className="w-full bg-white h-auto py-1 px-4 border-t border-t-[#1d1d1d] fixed bottom-0 left-0 md:hidden block">
         <div className="flex flex-row justify-between">
           {sidebarItems.map((item, index) => {
             return (
