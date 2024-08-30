@@ -8,7 +8,7 @@ import { FiSend } from "react-icons/fi";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa6";
 import CommentDialog from "./CommentDialog";
 
-const Post = () => {
+const Post = ({post}) => {
   const [text, setText] = useState("");
   const [open, setOpen] = useState(false);
 
@@ -25,8 +25,8 @@ const Post = () => {
       <div className="my-8 w-full max-w-sm mx-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Avatar src="#" alt="profile-image" size="40" round={true} />
-            <h1>username</h1>
+            <Avatar src={post.author?.profilePicture} alt="profile-image" size="40" round={true} />
+            <h1>{post.author?.username}</h1>
           </div>
           <Dialog>
             <DialogTrigger asChild>
@@ -55,7 +55,7 @@ const Post = () => {
           </Dialog>
         </div>
         <img
-          src="https://images.unsplash.com/photo-1693773852578-65cf594b62dd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGRldmVsb3BlciUyMHNldHVwfGVufDB8fDB8fHww"
+          src={post.image}
           alt="post-image"
           className="rounded-sm my-2 w-full aspect-square object-cover"
         />
@@ -77,9 +77,9 @@ const Post = () => {
             className="cursor-pointer hover:text-gray-600"
           />
         </div>
-        <span className="font-medium block mb-2">1k likes</span>
+        <span className="font-medium block mb-2">{post.likes.length} likes</span>
         <p>
-          <span className="font-medium mr-2">username</span>caption
+          <span className="font-medium mr-2">{post.author?.username}</span>{post.caption}
         </p>
         <span className="cursor-pointer text-md text-gray-400" onClick={() => setOpen(true)}>View all 50 comments</span>
         <CommentDialog open={open} setOpen={setOpen} />

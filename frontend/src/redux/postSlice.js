@@ -7,10 +7,10 @@ const postSlice=createSlice({
     },
     reducers:{
         // actions
-        setPost:(state,action)=>{
+        setPosts:(state,action)=>{
             state.posts=action.payload;
         }
     }
 });
-export const {setPost}=postSlice.actions;
+export const {setPosts}=postSlice.actions;
 export default postSlice.reducer;
