@@ -10,11 +10,13 @@ import Avatar from "react-avatar";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setAuthUser } from "@/redux/authSlice";
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
   const { user } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
 
   const logoutHandler = async () => {
     try {
@@ -22,6 +24,7 @@ const LeftSidebar = () => {
         withCredentials: true,
       });
       if (res.data.success) {
+        dispatch(setAuthUser(null));
         toast.success(res.data.message);
         navigate("/login");
       }
