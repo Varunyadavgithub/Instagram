@@ -4,6 +4,8 @@ import { readFileAsDataUri } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setPosts } from "@/redux/postSlice";
 
 const CreatePost = ({ open, setOpen }) => {
   const imageRef = useRef();
@@ -11,6 +13,8 @@ const CreatePost = ({ open, setOpen }) => {
   const [caption, setCaption] = useState("");
   const [imagePreview, setImagePreview] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch=useDispatch();
+  const {posts}=useSelector(store=>store.post);
 
   const fileChangeHandler = async (e) => {
     const file = e.target.files?.[0];
@@ -40,7 +44,9 @@ const CreatePost = ({ open, setOpen }) => {
         }
       );
       if (res.data.success) {
-        toast.success(res.data.message)
+        dispatch(setPosts([res.data.post, ...posts]))
+        toast.success(res.data.message);
+        setOpen(false);
       }
     } catch (error) {
       toast.error(error.response.data.message);
