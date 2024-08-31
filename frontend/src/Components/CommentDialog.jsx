@@ -5,19 +5,19 @@ import { Link } from "react-router-dom";
 import { MoreHorizontal } from "lucide-react";
 
 const CommentDialog = ({ open, setOpen }) => {
-  const [text,setText]=useState("");
+  const [text, setText] = useState("");
 
-  const changeEventHandler=(e)=>{
-    const inputText=e.target.value;
-    if(inputText.trim()){
+  const changeEventHandler = (e) => {
+    const inputText = e.target.value;
+    if (inputText.trim()) {
       setText(inputText);
-    }else{
+    } else {
       setText("");
     }
-  }
-  const sendMessageHandler=async ()=>{
-    alert(text)
-  }
+  };
+  const sendMessageHandler = async () => {
+    alert(text);
+  };
   return (
     <>
       <Dialog open={open}>
@@ -46,18 +46,22 @@ const CommentDialog = ({ open, setOpen }) => {
                   </Link>
                   <div>
                     <Link>
-                    <Link className="font-semibold text-xs">username</Link>
+                      <Link className="font-semibold text-xs">username</Link>
                       {/* <span className="text-gray-600">Bio here...</span> */}
                     </Link>
                   </div>
                 </div>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <MoreHorizontal className="cursor-pointer"/>
+                    <MoreHorizontal className="cursor-pointer" />
                   </DialogTrigger>
                   <DialogContent className="flex flex-col items-center text-sm text-center">
-                    <div className="cursor-pointer w-full text-[#ED4956] font-bold">Unfollow</div>
-                    <div className="cursor-pointer w-full">Add to favorites</div>
+                    <div className="cursor-pointer w-full text-[#ED4956] font-bold">
+                      Unfollow
+                    </div>
+                    <div className="cursor-pointer w-full">
+                      Add to favorites
+                    </div>
                   </DialogContent>
                 </Dialog>
               </div>
@@ -67,8 +71,20 @@ const CommentDialog = ({ open, setOpen }) => {
               </div>
               <div className="p-4">
                 <div className="flex items-center gap-2">
-                  <input type="text" value={text} onChange={changeEventHandler} placeholder="Add a comment..." className="w-full p-2 outline-none border border-gray-300 rounded-md" />
-                  <button disabled={!text.trim()} onClick={sendMessageHandler} className="p-2 border border-gray-300 rounded-md hover:bg-gray-200">Send</button>
+                  <input
+                    type="text"
+                    value={text}
+                    onChange={changeEventHandler}
+                    placeholder="Add a comment..."
+                    className="w-full p-2 outline-none border border-gray-300 rounded-md"
+                  />
+                  <button
+                    disabled={!text.trim()}
+                    onClick={sendMessageHandler}
+                    className="p-2 border border-gray-300 rounded-md hover:bg-gray-200"
+                  >
+                    Send
+                  </button>
                 </div>
               </div>
             </div>

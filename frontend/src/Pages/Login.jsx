@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setAuthUser } from "@/redux/authSlice.js";
+import { Loader2 } from "lucide-react";
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -85,12 +86,19 @@ const Login = () => {
               className="focus-visible:ring-transparent my-1 p-2 border border-black rounded-md"
             />
           </div>
-          <button
-            disabled={loading}
-            className="bg-blue-500 hover:bg-blue-700 p-2 rounded-md text-white text-lg"
-          >
-            {loading ? "Loading..." : "Login"}
-          </button>
+          {loading ? (
+            <button
+              disabled
+              className="bg-blue-500 hover:bg-blue-700 p-2 rounded-md text-white text-lg flex items-center justify-center"
+            >
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Please wait...
+            </button>
+          ) : (
+            <button className="bg-blue-500 hover:bg-blue-700 p-2 rounded-md text-white text-lg">
+              Login
+            </button>
+          )}
           <span className="text-center font-semibold my-2">
             Don't have an Account?{" "}
             <Link

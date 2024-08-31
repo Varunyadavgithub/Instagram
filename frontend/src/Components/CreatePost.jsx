@@ -47,6 +47,8 @@ const CreatePost = ({ open, setOpen }) => {
         dispatch(setPosts([res.data.post, ...posts]))
         toast.success(res.data.message);
         setOpen(false);
+        setImagePreview("");
+        setCaption("");
       }
     } catch (error) {
       toast.error(error.response.data.message);

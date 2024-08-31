@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 const Signup = () => {
   const [input, setInput] = useState({
@@ -92,12 +93,19 @@ const Signup = () => {
               className="focus-visible:ring-transparent my-1 p-2 border border-black rounded-md"
             />
           </div>
-          <button
-            disabled={loading}
-            className="bg-blue-500 hover:bg-blue-700 p-2 rounded-md text-white text-lg"
-          >
-            {loading ? "Loading..." : "Signup"}
-          </button>
+          {loading ? (
+            <button
+              disabled
+              className="bg-blue-500 hover:bg-blue-700 p-2 rounded-md text-white text-lg flex items-center justify-center"
+            >
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Please wait...
+            </button>
+          ) : (
+            <button className="bg-blue-500 hover:bg-blue-700 p-2 rounded-md text-white text-lg">
+              Signup
+            </button>
+          )}
           <span className="text-center font-semibold my-2">Already have an Account? <Link to="/login" className="text-blue-600 hover:underline font-bold">Login</Link></span>
         </form>
       </div>
