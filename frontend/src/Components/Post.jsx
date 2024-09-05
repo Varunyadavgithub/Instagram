@@ -10,7 +10,7 @@ import CommentDialog from "./CommentDialog";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { setPosts } from "@/redux/postSlice";
+import { setPosts, setSelectedPost } from "@/redux/postSlice";
 
 const Post = ({ post }) => {
   const [text, setText] = useState("");
@@ -19,6 +19,7 @@ const Post = ({ post }) => {
   const { posts } = useSelector((store) => store.post);
   const [liked, setLiked] = useState(post.likes.includes(user?._id) || false);
   const [postLike, setPostLike] = useState(post.likes.length);
+  const [comment, setComment] = useState(post.comments);
   const dispatch = useDispatch();
 
   const changEventHandler = (e) => {
@@ -55,6 +56,35 @@ const Post = ({ post }) => {
         );
         dispatch(setPosts(updatedPostData));
         toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const commentHandler = async () => {
+    try {
+      const res = await axios.post(
+        `http://localhost:8000/api/v1/post/${post._id}/comment`,
+        { text },
+        {
+          haders: {
+            "content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      if (res.data.success) {
+        const updatedCommentData = [...comment, res.data.comment];
+        setComment(updatedCommentData);
+
+        const updatedPostData = posts.map((p) =>
+          p._id === post._id ? { ...p, comments: updatedCommentData } : p
+        );
+        dispatch(setPosts(updatedPostData));
+        toast.success(res.data.message);
+        setText("");
       }
     } catch (error) {
       console.log(error);
@@ -145,7 +175,10 @@ const Post = ({ post }) => {
             <TbMessageCircle
               size={24}
               className="cursor-pointer hover:text-gray-600"
-              onClick={() => setOpen(true)}
+              onClick={() => {
+                dispatch(setSelectedPost(post));
+                setOpen(true);
+              }}
             />
             <FiSend size={24} className="cursor-pointer hover:text-gray-600" />
           </div>
@@ -159,12 +192,17 @@ const Post = ({ post }) => {
           <span className="font-medium mr-2">{post.author?.username}</span>
           {post.caption}
         </p>
-        <span
-          className="cursor-pointer text-md text-gray-400"
-          onClick={() => setOpen(true)}
-        >
-          View all 50 comments
-        </span>
+        {comment.length > 0 && (
+          <span
+            className="cursor-pointer text-md text-gray-400"
+            onClick={() => {
+              dispatch(setSelectedPost(post));
+              setOpen(true);
+            }}
+          >
+            View all {comment.length} comments
+          </span>
+        )}
         <CommentDialog open={open} setOpen={setOpen} />
         <div className="flex items-center justify-between">
           <input
@@ -174,7 +212,14 @@ const Post = ({ post }) => {
             placeholder="Add a comment..."
             className="outline-none text-sm w-full"
           />
-          {text && <span className="text-[#38ADF8]">Post</span>}
+          {text && (
+            <span
+              onClick={commentHandler}
+              className="text-[#38ADF8] cursor-pointer"
+            >
+              Post
+            </span>
+          )}
         </div>
       </div>
     </>

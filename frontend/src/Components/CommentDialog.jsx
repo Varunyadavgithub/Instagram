@@ -1,11 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import Avatar from "react-avatar";
 import { Link } from "react-router-dom";
 import { MoreHorizontal } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import Comment from "./comment";
+import axios from "axios";
+import { setPosts } from "@/redux/postSlice";
+import toast from "react-hot-toast";
 
 const CommentDialog = ({ open, setOpen }) => {
   const [text, setText] = useState("");
+  const { selectedPost, posts } = useSelector((store) => store.post);
+  const [comment, setComment] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (selectedPost) {
+      setComment(selectedPost?.comments);
+    }
+  }, [selectedPost]);
 
   const changeEventHandler = (e) => {
     const inputText = e.target.value;
@@ -15,9 +29,38 @@ const CommentDialog = ({ open, setOpen }) => {
       setText("");
     }
   };
+
   const sendMessageHandler = async () => {
-    alert(text);
+    try {
+      const res = await axios.post(
+        `http://localhost:8000/api/v1/post/${selectedPost._id}/comment`,
+        { text },
+        {
+          haders: {
+            "content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      if (res.data.success) {
+        const updatedCommentData = [...comment, res.data.comment];
+        setComment(updatedCommentData);
+
+        const updatedPostData = posts.map((p) =>
+          p._id === selectedPost._id
+            ? { ...p, comments: updatedCommentData }
+            : p
+        );
+        dispatch(setPosts(updatedPostData));
+        toast.success(res.data.message);
+        setText("");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
+
   return (
     <>
       <Dialog open={open}>
@@ -28,7 +71,7 @@ const CommentDialog = ({ open, setOpen }) => {
           <div className="flex flex-1">
             <div className="w-1/2">
               <img
-                src="https://images.unsplash.com/photo-1693773852578-65cf594b62dd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGRldmVsb3BlciUyMHNldHVwfGVufDB8fDB8fHww"
+                src={selectedPost?.image}
                 alt="post-image"
                 className="w-full h-full object-cover rounded-l-lg"
               />
@@ -38,16 +81,18 @@ const CommentDialog = ({ open, setOpen }) => {
                 <div className="flex items-center gap-3">
                   <Link to="">
                     <Avatar
-                      src="#"
+                      src={selectedPost?.author?.profilePicture}
                       alt="profile-image"
                       size="40"
                       round={true}
                     />
                   </Link>
                   <div>
-                    <Link>
-                      <Link className="font-semibold text-xs">username</Link>
-                      {/* <span className="text-gray-600">Bio here...</span> */}
+                    <Link className="flex flex-col items-center justify-center">
+                      <Link className="font-semibold text-xl">
+                        {selectedPost?.author?.username}
+                      </Link>
+                      {/* <span className="text-gray-600 text-sm">{selectedPost?.bio}</span> */}
                     </Link>
                   </div>
                 </div>
@@ -66,8 +111,10 @@ const CommentDialog = ({ open, setOpen }) => {
                 </Dialog>
               </div>
               <hr />
-              <div className="flex-1 overflow-y-hidden max-h-96 p-4">
-                Coments ayenge
+              <div className="flex-1 overflow-y-auto max-h-96 p-4">
+                {comment.map((comment) => (
+                  <Comment key={comment?._id} comment={comment} />
+                ))}
               </div>
               <div className="p-4">
                 <div className="flex items-center gap-2">
@@ -76,7 +123,7 @@ const CommentDialog = ({ open, setOpen }) => {
                     value={text}
                     onChange={changeEventHandler}
                     placeholder="Add a comment..."
-                    className="w-full p-2 outline-none border border-gray-300 rounded-md"
+                    className="w-full p-2 outline-none text-sm border border-gray-300 rounded-md"
                   />
                   <button
                     disabled={!text.trim()}
