@@ -121,7 +121,10 @@ const Post = ({ post }) => {
               size="40"
               round={true}
             />
-            <h1>{post.author?.username}</h1>
+            <div className="flex items-center gap-4">
+              <h1>{post.author?.username}</h1>
+              {user?._id === post.author?._id && <span className="bg-gray-200 rounded-full font-semibold text-xs px-2 py-1.5">Author</span>}
+            </div>
           </div>
           <Dialog>
             <DialogTrigger asChild>
