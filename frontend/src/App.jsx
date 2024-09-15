@@ -1,17 +1,19 @@
 import React from "react";
 import Signup from "./Pages/Signup";
 import Login from "./Pages/Login";
-import Mainlayout from './Components/Mainlayout'
-import Home from "./Components/Home"
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import Mainlayout from './Components/Mainlayout';
+import Home from "./Components/Home";
 import Profile from "./Components/Profile";
 import EditProfile from "./Components/EditProfile";
+import ChatPage from "./Components/ChatPage";
+import MobileChat from "./Components/MobileChat"; 
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-const browserRouter=createBrowserRouter([
+const browserRouter = createBrowserRouter([
   {
-    path:"/",
-    element:<Mainlayout/>,
-    _children: [
+    path: "/",
+    element: <Mainlayout />,
+    children: [
       {
         path: "/",
         element: <Home />
@@ -23,27 +25,30 @@ const browserRouter=createBrowserRouter([
       {
         path: "/account/edit",
         element: <EditProfile />
+      },
+      {
+        path: "/chat",
+        element: <ChatPage />
+      },
+      {
+        path: "/chat/:userId", // Mobile route for chat with selected user
+        element: <MobileChat />
       }
-    ],
-    get children() {
-      return this._children;
-    },
-    set children(value) {
-      this._children = value;
-    },
+    ]
   },
   {
-    path:"/login",
-    element:<Login/>
+    path: "/login",
+    element: <Login />
   },
   {
-    path:"/signup",
-    element:<Signup/>
-  },
-])
+    path: "/signup",
+    element: <Signup />
+  }
+]);
+
 const App = () => (
   <>
-   <RouterProvider router={browserRouter}/>
+    <RouterProvider router={browserRouter} />
   </>
 );
 
