@@ -110,6 +110,21 @@ const Post = ({ post }) => {
       toast.error(error.response.data.message);
     }
   };
+
+  const bookmarkHandler = async () => {
+    try {
+      const res =await  axios.get(
+        `http://localhost:8000/api/v1/post/${post?._id}/bookmark`,
+        { withCredentials: true }
+      );
+      if (res.data.success) {
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
   return (
     <>
       <div className="my-8 w-full max-w-sm mx-auto">
@@ -123,7 +138,11 @@ const Post = ({ post }) => {
             />
             <div className="flex items-center gap-4">
               <h1>{post.author?.username}</h1>
-              {user?._id === post.author?._id && <span className="bg-gray-200 rounded-full font-semibold text-xs px-2 py-1.5">Author</span>}
+              {user?._id === post.author?._id && (
+                <span className="bg-gray-200 rounded-full font-semibold text-xs px-2 py-1.5">
+                  Author
+                </span>
+              )}
             </div>
           </div>
           <Dialog>
@@ -186,6 +205,7 @@ const Post = ({ post }) => {
             <FiSend size={24} className="cursor-pointer hover:text-gray-600" />
           </div>
           <FaRegBookmark
+            onClick={bookmarkHandler}
             size={24}
             className="cursor-pointer hover:text-gray-600"
           />
