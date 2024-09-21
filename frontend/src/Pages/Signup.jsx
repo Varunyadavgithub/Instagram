@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const Signup = () => {
   const [input, setInput] = useState({
@@ -11,7 +12,8 @@ const Signup = () => {
     password: "",
   });
   const [loading, setLoading] = useState(false);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+  const { user } = useSelector((store) => store.auth);
 
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -39,7 +41,7 @@ const Signup = () => {
           email: "",
           password: "",
         });
-        navigate('/login');
+        navigate("/login");
       }
     } catch (error) {
       console.log(error);
@@ -48,6 +50,12 @@ const Signup = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, []);
   return (
     <>
       <div className="flex items-center w-screen h-screen justify-center">
@@ -106,7 +114,15 @@ const Signup = () => {
               Signup
             </button>
           )}
-          <span className="text-center font-semibold my-2">Already have an Account? <Link to="/login" className="text-blue-600 hover:underline font-bold">Login</Link></span>
+          <span className="text-center font-semibold my-2">
+            Already have an Account?{" "}
+            <Link
+              to="/login"
+              className="text-blue-600 hover:underline font-bold"
+            >
+              Login
+            </Link>
+          </span>
         </form>
       </div>
     </>

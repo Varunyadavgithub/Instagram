@@ -113,7 +113,7 @@ const Post = ({ post }) => {
 
   const bookmarkHandler = async () => {
     try {
-      const res =await  axios.get(
+      const res = await axios.get(
         `http://localhost:8000/api/v1/post/${post?._id}/bookmark`,
         { withCredentials: true }
       );
@@ -150,12 +150,14 @@ const Post = ({ post }) => {
               <MoreHorizontal className="cursor-pointer" />
             </DialogTrigger>
             <DialogContent className="flex flex-col items-center text-sm text-center">
-              <button
-                variant="ghost"
-                className="cursor-pointer w-fit text-[#ED4956] font-semibold p-3 rounded-md"
-              >
-                Unfollow
-              </button>
+              {post?.author?._id !== user?._id && (
+                <button
+                  variant="ghost"
+                  className="cursor-pointer w-fit text-[#ED4956] font-semibold p-3 rounded-md"
+                >
+                  Unfollow
+                </button>
+              )}
               <button
                 variant="ghost"
                 className="cursor-pointer w-fit font-semibold p-3 rounded-md"
