@@ -1,16 +1,19 @@
 import { setSelectedUser } from "@/redux/authSlice";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "react-avatar";
 import { useDispatch, useSelector } from "react-redux";
 import { TbMessageCircleCode } from "react-icons/tb";
 import { IoIosSend } from "react-icons/io";
 import Messages from "./Messages";
+import axios from "axios";
+import { setMessages } from "@/redux/chatSlice";
 
 const ChatPage = () => {
+  const [textMessage, setTextMessage] = useState("");
   const { user, suggestedUsers, selectedUser } = useSelector(
     (store) => store.auth
   );
-  const isOnline = true;
+  const { onlineUsers, messages } = useSelector((store) => store.chat);
   const dispatch = useDispatch();
 
   // State to manage mobile view
@@ -30,7 +33,29 @@ const ChatPage = () => {
     setIsMobileChatOpen(false);
     dispatch(setSelectedUser(null));
   };
+  
+  const sendMessageHandler=async (receiverId)=>{
+    try {
+      const res=await axios.post(`http://localhost:8000/api/v1/message/send/${receiverId}`,{textMessage},{
+        headers:{
+          'Content-Type':'application/json'
+        },
+        withCredentials:true
+      });
+      if (res.data.success) {
+        dispatch(setMessages([...messages,res.data.newMessage]));
+        setTextMessage("");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
+  useEffect(()=>{
+    return()=>{
+      dispatch(setSelectedUser(null));
+    }
+  },[])
   return (
     <>
       <div className="flex md:ml-[16%] h-screen">
@@ -46,6 +71,7 @@ const ChatPage = () => {
           </div>
           <div className="overflow-y-auto h-[calc(100vh-100px)]">
             {suggestedUsers.map((suggestedUser) => {
+              const isOnline = onlineUsers.includes(suggestedUser?._id);
               return (
                 <div
                   key={suggestedUser?._id}
@@ -124,11 +150,13 @@ const ChatPage = () => {
             {/* Message Input */}
             <div className="flex items-center p-4 border-t border-t-gray-300">
               <input
+                value={textMessage}
+                onChange={(e) => setTextMessage(e.target.value)}
                 type="text"
                 className="flex-1 mr-2 focus-visible:ring-transparent p-2 border border-gray-300 rounded-md"
                 placeholder="Message..."
               />
-              <button>
+              <button onClick={()=>sendMessageHandler(selectedUser?._id)}>
                 <IoIosSend size={24} />
               </button>
             </div>

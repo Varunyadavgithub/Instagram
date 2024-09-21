@@ -1,5 +1,5 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import authSlice from "./authSlice";
+import authSlice from "./authSlice.js";
 import {
   persistReducer,
   FLUSH,
@@ -11,7 +11,10 @@ import {
 } from "redux-persist";
 
 import storage from "redux-persist/lib/storage";
-import postSlice from "./postSlice";
+import postSlice from "./postSlice.js";
+import socketSlice from "./socketSlice.js";
+import chatSlice from "./chatSlice.js";
+import rtnSlice from "./rtnSlice.js";
 
 const persistConfig = {
   key: "root",
@@ -19,10 +22,13 @@ const persistConfig = {
   storage,
 };
 
-const rootReducer=combineReducers({
-    auth:authSlice,
-    post:postSlice,
-})
+const rootReducer = combineReducers({
+  auth: authSlice,
+  post: postSlice,
+  socketio: socketSlice,
+  chat: chatSlice,
+  realTimeNotification: rtnSlice,
+});
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 const store = configureStore({
   reducer: persistedReducer,

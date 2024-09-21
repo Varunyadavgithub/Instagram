@@ -1,8 +1,16 @@
+import useGetAllMessage from "@/hooks/useGetAllMessage";
+import useGetRTM from "@/hooks/useGetRTM";
 import React from "react";
 import Avatar from "react-avatar";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Messages = ({ selectedUser }) => {
+  useGetRTM();
+  useGetAllMessage();
+  const { messages } = useSelector((store) => store.chat);
+  const { user } = useSelector((store) => store.auth);
+
   return (
     <>
       <div className="overflow-y-auto flex-1 p-4 bg-gray-50">
@@ -23,20 +31,29 @@ const Messages = ({ selectedUser }) => {
           </div>
         </div>
         <div className="flex flex-col gap-3">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((msg) => {
-            return (
-              <div
-                key={msg}
-                className={`flex ${
-                  msg % 2 === 0 ? "justify-start" : "justify-end"
-                }`}
-              >
-                <div className="max-w-xs p-2 bg-white rounded-md shadow">
-                  <span>Message {msg}</span>
+          {messages &&
+            messages.map((msg, idx) => {
+              return (
+                <div
+                  key={idx}
+                  className={`flex ${
+                    msg?.senderId === user?._id
+                      ? "justify-end"
+                      : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`max-w-xs p-2 rounded-md shadow ${
+                      msg?.senderId === user?._id
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-200 text-black"
+                    }`}
+                  >
+                    <span>{msg.message}</span>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
     </>

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { readFileAsDataUri } from "@/lib/utils";
+import  {readFileAsDataURL}  from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -20,7 +20,7 @@ const CreatePost = ({ open, setOpen }) => {
     const file = e.target.files?.[0];
     if (file) {
       setFile(file);
-      const dataUri = await readFileAsDataUri(file);
+      const dataUri = await readFileAsDataURL(file);
       setImagePreview(dataUri);
     }
   };
